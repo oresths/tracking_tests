@@ -1,0 +1,7 @@
+<launch>
+
+  <node pkg="streamer" name="streamer" type="streamer"/>
+
+  <node pkg="ORB_SLAM2" name="Mono" type="Mono" args="/home/menas/git/save_ORB_SLAM2/Vocabulary/ORBvoc.txt /home/menas/EuRoC.yaml false"/>
+
+</launch>

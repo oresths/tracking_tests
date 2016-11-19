@@ -7,7 +7,7 @@
 int main(int argc, char **argv)
 {
 
-  ros::init(argc, argv, "stream_n_track");
+  ros::init(argc, argv, "streamer");
 
   ros::NodeHandle nh;
 
@@ -20,6 +20,7 @@ int main(int argc, char **argv)
   if(!cap.isOpened()) return 1;
 
   cv::Mat frame;
+  cv::Mat gray;
   sensor_msgs::ImagePtr msg;
 
   ros::Rate loop_rate(25);
@@ -28,7 +29,8 @@ int main(int argc, char **argv)
 
     // Check if grabbed frame is actually full with some content
     if(!frame.empty()) {
-      msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", frame).toImageMsg();
+      cvtColor(frame, gray, CV_BGR2GRAY);
+      msg = cv_bridge::CvImage(std_msgs::Header(), "mono8", gray).toImageMsg();
       pub.publish(msg);
     }
 
@@ -37,3 +39,4 @@ int main(int argc, char **argv)
 
   return 0;
 }
+

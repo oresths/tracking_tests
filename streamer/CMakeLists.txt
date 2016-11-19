@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(tracker)
+project(streamer)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -103,8 +103,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES tracker
-#  CATKIN_DEPENDS roscpp std_msgs
+#  LIBRARIES streamer
+#  CATKIN_DEPENDS roscpp s std_msgs
 #  DEPENDS system_lib
 )
 
@@ -116,29 +116,28 @@ catkin_package(
 ## Your package locations should be listed before other locations
 # include_directories(include)
 include_directories(
-  include
   ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
-# add_library(tracker
-#   src/${PROJECT_NAME}/tracker.cpp
+# add_library(streamer
+#   src/${PROJECT_NAME}/streamer.cpp
 # )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
-# add_dependencies(tracker ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_dependencies(streamer ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-add_executable(tracker src/tracker.cpp)
+add_executable(streamer src/streamer.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(tracker ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(streamer ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(tracker
+target_link_libraries(streamer
   ${catkin_LIBRARIES}
 )
 
@@ -157,7 +156,7 @@ target_link_libraries(tracker
 # )
 
 ## Mark executables and/or libraries for installation
-# install(TARGETS tracker tracker_node
+# install(TARGETS streamer streamer_node
 #   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -182,7 +181,7 @@ target_link_libraries(tracker
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_tracker.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_streamer.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
