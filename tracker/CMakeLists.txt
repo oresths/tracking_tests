@@ -117,6 +117,8 @@ catkin_package(
 # include_directories(include)
 include_directories(
   include
+  /usr/local/MATLAB/R2016b/extern/include
+  /mnt/hgfs/Vision/libraries/include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -137,8 +139,12 @@ add_executable(tracker src/tracker.cpp)
 ## same as for the library above
 add_dependencies(tracker ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
+find_library(MATLAB_LIB test /mnt/hgfs/Vision/libraries/lib)
+message(STATUS MATLAB_LIB  ${MATLAB_LIB} )
+
 ## Specify libraries to link a library or executable target against
 target_link_libraries(tracker
+  ${MATLAB_LIB}
   ${catkin_LIBRARIES}
 )
 
