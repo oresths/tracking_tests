@@ -110,7 +110,7 @@ Parameters TrackerRun::parseCmdArgs()
     paras.repeat = false;
     paras.startFrame = 1;
 
-    stringstream initBbSs("261,48,39,65");
+    stringstream initBbSs("707,362,40,97");
 
     double initBb[4];
 

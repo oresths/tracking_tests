@@ -1,22 +1,32 @@
-#include "ros/ros.h"
-#include "std_msgs/String.h"
-#include <image_transport/image_transport.h>
-#include <opencv2/highgui/highgui.hpp>
-#include <cv_bridge/cv_bridge.h>
+#include "tracker/tracker.hpp"
 
-void chatterCallback(const std_msgs::String::ConstPtr& msg)
-{
-  ROS_INFO("I heard: [%s]", msg->data.c_str());
+Tracking::Tracking() {
+  mainObj.init();
+}
+
+void Tracking::callback(const sensor_msgs::ImageConstPtr& msg) {
+  ROS_DEBUG("I heard: []");
+
+  try
+  {
+    mainObj.update(cv_bridge::toCvShare(msg, "bgr8")->image);
+  }
+  catch (cv_bridge::Exception& e)
+  {
+    ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
+  }
 }
 
 int main(int argc, char **argv)
 {
-
   ros::init(argc, argv, "tracker");
 
   ros::NodeHandle nh;
 
-  ros::Subscriber sub = nh.subscribe("/camera/image_raw", 300, chatterCallback);
+  Tracking dsst;
+
+  image_transport::ImageTransport it(nh);
+  image_transport::Subscriber sub = it.subscribe("/camera/image_raw", 300, &Tracking::callback, &dsst);
 
   ros::spin();
 
