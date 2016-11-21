@@ -29,10 +29,11 @@
 // the use of this software, even if advised of the possibility of such damage.
 */
 
-#include <tclap/CmdLine.h>
+//#include <tclap/CmdLine.h>
 #include <iostream>
 #include "dsst_tracker.hpp"
 #include "tracker_run.hpp"
+#include <unistd.h>
 
 class DsstTrackerRun : public TrackerRun
 {
@@ -43,7 +44,7 @@ public:
     virtual ~DsstTrackerRun()
     {}
 
-    virtual cf_tracking::CfTracker* parseTrackerParas(TCLAP::CmdLine& cmd, int argc, const char** argv)
+    virtual cf_tracking::CfTracker* parseTrackerParas()
     {
         cf_tracking::DsstParameters paras;
 
@@ -134,9 +135,30 @@ private:
 int main(int argc, const char** argv)
 {
     DsstTrackerRun mainObj;
+    mainObj.init();
 
-    if (!mainObj.start(argc, argv))
-        return -1;
+//    cv::VideoCapture cap("/mnt/hgfs/Vision/Dataset UAV123/UAV123/data_seq/UAV123/bike1/%06d.jpg");
+    cv::VideoCapture cap("/home/menas/git/cf_tracking/sample/sample_sequence_compressed/%05d.jpg");
+      // Check if video device can be opened with the given index
+    if(!cap.isOpened()) return 1;
+
+    cv::Mat frame;
+    cv::Mat gray;
+
+    while (1) {
+      cap >> frame;
+
+      // Check if grabbed frame is actually full with some content
+      if(!frame.empty()) {
+        cvtColor(frame, gray, CV_BGR2GRAY);	//problem in fhog memory deallocation with 1-channel (gray)
+        mainObj.update(frame);
+      }
+
+      usleep(500);
+    }
+
+//    if (!mainObj.start(argc, argv))
+//        return -1;
 
     return 0;
 }

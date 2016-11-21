@@ -84,17 +84,19 @@ public:
     TrackerRun(std::string windowTitle);
     virtual ~TrackerRun();
     bool start(int argc, const char** argv);
+    bool update(const cv::Mat im);
+    bool init();
     void setTrackerDebug(cf_tracking::TrackerDebug* debug);
 
 private:
-    Parameters parseCmdArgs(int argc, const char** argv);
-    bool init();
+    Parameters parseCmdArgs();
+//    bool init();
     bool run();
-    bool update();
+//    bool update();
     void printResults(const cv::Rect_<double>& boundingBox, bool isConfident, double fps);
 
 protected:
-    virtual cf_tracking::CfTracker* parseTrackerParas(TCLAP::CmdLine& cmd, int argc, const char** argv) = 0;
+    virtual cf_tracking::CfTracker* parseTrackerParas() = 0;
 private:
     cv::Mat _image;
     cf_tracking::CfTracker* _tracker;

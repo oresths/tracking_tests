@@ -71,6 +71,7 @@ _cmd(_windowTitle.c_str(), ' ', "0.1"),
 _debug(0)
 {
     _tracker = 0;
+    _frameIdx = 0;
 }
 
 TrackerRun::~TrackerRun()
@@ -85,11 +86,11 @@ TrackerRun::~TrackerRun()
     }
 }
 
-Parameters TrackerRun::parseCmdArgs(int argc, const char** argv)
+Parameters TrackerRun::parseCmdArgs()
 {
     Parameters paras;
 
-    _tracker = parseTrackerParas(_cmd, argc, argv);
+    _tracker = parseTrackerParas();
 
     paras.device = 0;
     paras.sequencePath = "sample_sequence_compressed";
@@ -194,7 +195,7 @@ Parameters TrackerRun::parseCmdArgs(int argc, const char** argv)
 
 bool TrackerRun::start(int argc, const char** argv)
 {
-    _paras = parseCmdArgs(argc, argv);
+    _paras = parseCmdArgs();
 
     while (true)
     {
@@ -215,31 +216,33 @@ bool TrackerRun::start(int argc, const char** argv)
 
 bool TrackerRun::init()
 {
-    ImgAcqParas imgAcqParas;
-    imgAcqParas.device = _paras.device;
-    imgAcqParas.expansionStr = _paras.expansion;
-    imgAcqParas.isMock = _paras.isMockSequence;
-    imgAcqParas.sequencePath = _paras.sequencePath;
-    _cap.open(imgAcqParas);
+//    ImgAcqParas imgAcqParas;
+//    imgAcqParas.device = _paras.device;
+//    imgAcqParas.expansionStr = _paras.expansion;
+//    imgAcqParas.isMock = _paras.isMockSequence;
+//    imgAcqParas.sequencePath = _paras.sequencePath;
+//    _cap.open(imgAcqParas);
+//
+//    if (!_cap.isOpened())
+//    {
+//        cerr << "Could not open device/sequence/video!" << endl;
+//        exit(-1);
+//    }
+//
+//    int startIdx = _paras.startFrame - 1;
+//
+//    // HACKFIX:
+//    //_cap.set(CV_CAP_PROP_POS_FRAMES, startIdx);
+//    // OpenCV's _cap.set in combination with image sequences is
+//    // currently bugged on Linux
+//    // TODO: review when OpenCV 3.0 is stable
+//    cv::Mat temp;
+//
+//    for (int i = 0; i < startIdx; ++i)
+//        _cap >> temp;
+//    // HACKFIX END
 
-    if (!_cap.isOpened())
-    {
-        cerr << "Could not open device/sequence/video!" << endl;
-        exit(-1);
-    }
-
-    int startIdx = _paras.startFrame - 1;
-
-    // HACKFIX:
-    //_cap.set(CV_CAP_PROP_POS_FRAMES, startIdx);
-    // OpenCV's _cap.set in combination with image sequences is
-    // currently bugged on Linux
-    // TODO: review when OpenCV 3.0 is stable
-    cv::Mat temp;
-
-    for (int i = 0; i < startIdx; ++i)
-        _cap >> temp;
-    // HACKFIX END
+	_paras = parseCmdArgs();
 
     if (_paras.showOutput)
         namedWindow(_windowTitle.c_str());
@@ -283,7 +286,9 @@ bool TrackerRun::run()
 
     while (true)
     {
-        success = update();
+//        success = update();
+    	success = false;
+    	std::cout << "Shouldn't have come here" << std::endl;
 
         if (!success)
             break;
@@ -294,14 +299,15 @@ bool TrackerRun::run()
     return true;
 }
 
-bool TrackerRun::update()
+bool TrackerRun::update(const cv::Mat im)
 {
     int64 tStart = 0;
     int64 tDuration = 0;
 
     if (!_isPaused || _frameIdx == 0 || _isStep)
     {
-        _cap >> _image;
+//        _cap >> _image;
+    	_image = im;
 
         if (_image.empty())
             return false;

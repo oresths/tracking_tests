@@ -212,8 +212,8 @@ include_directories(${CF_TCLAP_DIR}
                     ${CF_PIOTR_DIR}/src
                     ${FORROS_DIR}src/main)
 
-include_directories(${FORROS_DIR}src/cf_libs/kcf
-                    ${FORROS_DIR}src/cf_libs/dsst
+include_directories(${FORROS_DIR}src/cf_libs/dsst
+#		    ${FORROS_DIR}src/cf_libs/kcf
                     ${FORROS_DIR}src/cf_libs/common)
                     
 set(CF_PIOTR_SOURCES
