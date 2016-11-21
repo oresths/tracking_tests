@@ -141,6 +141,7 @@ add_dependencies(tracker ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_T
 target_link_libraries(tracker
   ${catkin_LIBRARIES}
 )
+#message(CatkinLIbs ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -189,3 +190,69 @@ target_link_libraries(tracker
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+# add c++11 support
+if(CMAKE_COMPILER_IS_GNUCC)
+    ADD_DEFINITIONS ( -std=c++11 )
+endif(CMAKE_COMPILER_IS_GNUCC)
+
+find_package(OpenCV REQUIRED)
+
+# add 3rdparty source
+set(FORROS_DIR "../cf_tracking/")
+
+set(CF_TCLAP_DIR "${FORROS_DIR}src/3rdparty/tclap")
+set(CF_CV_EXT_DIR "${FORROS_DIR}src/3rdparty/cv_ext")
+set(CF_PIOTR_DIR "${FORROS_DIR}src/3rdparty/piotr")
+
+include_directories(${OpenCV_DIR}/include)
+include_directories(${CF_TCLAP_DIR}
+                    ${CF_CV_EXT_DIR}
+                    ${CF_PIOTR_DIR}
+                    ${CF_PIOTR_DIR}/src
+                    ${FORROS_DIR}src/main)
+
+include_directories(${FORROS_DIR}src/cf_libs/kcf
+                    ${FORROS_DIR}src/cf_libs/dsst
+                    ${FORROS_DIR}src/cf_libs/common)
+                    
+set(CF_PIOTR_SOURCES
+    ${CF_PIOTR_DIR}/gradientMex.hpp
+    ${CF_PIOTR_DIR}/src/gradientMex.cpp
+    ${CF_PIOTR_DIR}/src/sse.hpp
+    ${CF_PIOTR_DIR}/src/wrappers.hpp)
+
+set(CF_LIB_COMMON_SOURCES
+    ${FORROS_DIR}src/cf_libs/common/feature_channels.hpp
+    ${FORROS_DIR}src/cf_libs/common/mat_consts.hpp
+    ${FORROS_DIR}src/cf_libs/common/math_helper.hpp
+    ${FORROS_DIR}src/cf_libs/common/math_helper.cpp
+    ${FORROS_DIR}src/cf_libs/common/cf_tracker.hpp
+    ${FORROS_DIR}src/cf_libs/common/tracker_debug.hpp
+    ${FORROS_DIR}src/cf_libs/common/scale_estimator.hpp
+    ${FORROS_DIR}src/cf_libs/common/cv_ext.hpp
+    ${CF_CV_EXT_DIR}/shift.cpp
+    ${CF_CV_EXT_DIR}/shift.hpp
+    ${CF_CV_EXT_DIR}/math_spectrums.cpp
+    ${CF_CV_EXT_DIR}/math_spectrums.hpp
+    ${CF_CV_EXT_DIR}/psr.hpp
+    ${CF_PIOTR_SOURCES})
+
+set(CF_MAIN_SOURCES
+    ${FORROS_DIR}src/main/image_acquisition.hpp
+    ${FORROS_DIR}src/main/image_acquisition.cpp
+    ${CF_CV_EXT_DIR}/init_box_selector.hpp
+    ${CF_CV_EXT_DIR}/init_box_selector.cpp
+    ${CF_CV_EXT_DIR}/tracker_run.hpp
+    ${CF_CV_EXT_DIR}/tracker_run.cpp
+    ${CF_TCLAP_DIR}/tclap/CmdLine.h)
+
+add_executable(DSSTcpp
+    ${FORROS_DIR}src/main/main_dsst.cpp
+    ${FORROS_DIR}src/cf_libs/dsst/dsst_debug.hpp
+    ${FORROS_DIR}src/cf_libs/dsst/dsst_tracker.hpp
+    ${CF_MAIN_SOURCES}
+    ${CF_LIB_COMMON_SOURCES})
+target_link_libraries(DSSTcpp ${OpenCV_LIBS})
+
+
