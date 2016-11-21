@@ -8,7 +8,7 @@ void Tracking::callback(const sensor_msgs::ImageConstPtr& msg) {
   ROS_DEBUG("I heard: []");
 
   try
-  {
+  { //Doesn't work with mono8, because of the original code
     mainObj.update(cv_bridge::toCvShare(msg, "bgr8")->image);
   }
   catch (cv_bridge::Exception& e)
