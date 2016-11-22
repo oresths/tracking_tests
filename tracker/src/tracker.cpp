@@ -26,6 +26,7 @@ int main(int argc, char **argv)
   Tracking dsst;
 
   image_transport::ImageTransport it(nh);
+  //If the subscriber's buffer overflows the target will be lost suddenly
   image_transport::Subscriber sub = it.subscribe("/camera/image_raw", 300, &Tracking::callback, &dsst);
 
   ros::spin();

@@ -204,6 +204,7 @@ add_executable(tracker
     ${CF_MAIN_SOURCES}
     ${CF_LIB_COMMON_SOURCES})
 
+#add_library(dsst)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
